@@ -10,26 +10,30 @@
    value])
 
 (defn board []
-  (let [squares (reagent/atom (vec (repeat 9 nil)))]
+  (let [state (reagent/atom {:squares    (vec (repeat 9 nil))
+                             :x-is-next? true})]
     (letfn [(handle-click [i]
-              (swap! squares assoc i "X"))
+              (let [x-is-next? (:x-is-next? @state)]
+                (swap! state assoc-in [:squares i] (if x-is-next? "X" "O"))
+                (swap! state update :x-is-next? not)))
             (render-square [i]
-              [square {:value    (nth @squares i)
+              [square {:value    (nth (:squares @state) i)
                        :on-click #(handle-click i)}])]
-      [:div
-       [:div {:className "status"} "Next player: X"]
-       [:div {:className "board-row"}
-        [render-square 0]
-        [render-square 1]
-        [render-square 2]]
-       [:div {:className "board-row"}
-        [render-square 3]
-        [render-square 4]
-        [render-square 5]]
-       [:div {:className "board-row"}
-        [render-square 6]
-        [render-square 7]
-        [render-square 8]]])))
+      (fn []
+        [:div
+         [:div {:className "status"} "Next player: " (if (:x-is-next? state) "X" "O")]
+         [:div {:className "board-row"}
+          [render-square 0]
+          [render-square 1]
+          [render-square 2]]
+         [:div {:className "board-row"}
+          [render-square 3]
+          [render-square 4]
+          [render-square 5]]
+         [:div {:className "board-row"}
+          [render-square 6]
+          [render-square 7]
+          [render-square 8]]]))))
 
 (defn game []
   [:div {:className "game"}
