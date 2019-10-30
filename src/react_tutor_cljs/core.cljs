@@ -4,8 +4,12 @@
 
 (enable-console-print!)
 
-(defn square [{:keys [value]}]
-  [:button {:className "square"} value])
+(defn square []
+  (let [value (reagent/atom nil)]
+    (fn []
+      [:button {:className "square"
+                :onClick   #(reset! value "X")}
+       @value])))
 
 (defn board []
   (letfn [(render-square [i]
