@@ -4,30 +4,32 @@
 
 (enable-console-print!)
 
-(defn square []
-  (let [value (reagent/atom nil)]
-    (fn []
-      [:button {:className "square"
-                :onClick   #(reset! value "X")}
-       @value])))
+(defn square [{:keys [value on-click]}]
+  [:button {:className "square"
+            :on-click  on-click}
+   value])
 
 (defn board []
-  (letfn [(render-square [i]
-            [square {:value i}])]
-    [:div
-     [:div {:className "status"} "Next player: X"]
-     [:div {:className "board-row"}
-      [render-square 0]
-      [render-square 1]
-      [render-square 2]]
-     [:div {:className "board-row"}
-      [render-square 3]
-      [render-square 4]
-      [render-square 5]]
-     [:div {:className "board-row"}
-      [render-square 6]
-      [render-square 7]
-      [render-square 8]]]))
+  (let [squares (reagent/atom (vec (repeat 9 nil)))]
+    (letfn [(handle-click [i]
+              (swap! squares assoc i "X"))
+            (render-square [i]
+              [square {:value    (nth @squares i)
+                       :on-click #(handle-click i)}])]
+      [:div
+       [:div {:className "status"} "Next player: X"]
+       [:div {:className "board-row"}
+        [render-square 0]
+        [render-square 1]
+        [render-square 2]]
+       [:div {:className "board-row"}
+        [render-square 3]
+        [render-square 4]
+        [render-square 5]]
+       [:div {:className "board-row"}
+        [render-square 6]
+        [render-square 7]
+        [render-square 8]]])))
 
 (defn game []
   [:div {:className "game"}
