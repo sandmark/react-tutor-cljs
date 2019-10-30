@@ -4,12 +4,12 @@
 
 (enable-console-print!)
 
-(defn square [i]
-  [:button {:className "square"}])
+(defn square [{:keys [value]}]
+  [:button {:className "square"} value])
 
 (defn board []
   (letfn [(render-square [i]
-            [square i])]
+            [square {:value i}])]
     [:div
      [:div {:className "status"} "Next player: X"]
      [:div {:className "board-row"}
