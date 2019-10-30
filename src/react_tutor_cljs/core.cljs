@@ -4,19 +4,45 @@
 
 (enable-console-print!)
 
-(defn shopping-list [{:keys [name]}]
-  [:div {:className "shopping-list"}
-   [:h1 "Shopping List for " name]
-   [:ul
-    [:li "Instagram"]
-    [:li "WhatsApp"]
-    [:li "Oculus"]]])
+(defn square [i]
+  [:button {:className "square"}])
+
+(defn board []
+  (letfn [(render-square [i]
+            [square i])]
+    [:div
+     [:div {:className "status"} "Next player: X"]
+     [:div {:className "board-row"}
+      [render-square 0]
+      [render-square 1]
+      [render-square 2]]
+     [:div {:className "board-row"}
+      [render-square 3]
+      [render-square 4]
+      [render-square 5]]
+     [:div {:className "board-row"}
+      [render-square 6]
+      [render-square 7]
+      [render-square 8]]]))
+
+(defn game []
+  [:div {:className "game"}
+   [:div {:className "game-board"}
+    [board]]
+   [:div {:className "game-info"}
+    [:div
+     ;; status
+     ]
+    [:ol
+     ;; TODO
+     ]]])
+
 (defn get-app-element []
   (gdom/getElement "app"))
 
 (defn mount [element]
   "Renders *initial* component to DOM object `element`."
-  (reagent/render-component [shopping-list {:name "Mark"}] element))
+  (reagent/render-component [game] element))
 
 (defn mount-app-element []
   (when-let [element (get-app-element)]
